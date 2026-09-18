@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #f0fdfa;
+  --color-primary-100: #ccfbf1;
+  --color-primary-200: #99f6e4;
+  --color-primary-300: #5eead4;
+  --color-primary-400: #2dd4bf;
+  --color-primary-500: #14b8a6;
+  --color-primary-600: #0f766e;
+  --color-primary-700: #115e59;
+  --color-primary-800: #134e4a;
+  --color-primary-900: #042f2e;
+
+  --color-accent-50: #eff6ff;
+  --color-accent-100: #dbeafe;
+  --color-accent-200: #bfdbfe;
+  --color-accent-300: #93c5fd;
+  --color-accent-400: #60a5fa;
+  --color-accent-500: #3b82f6;
+  --color-accent-600: #2563eb;
+  --color-accent-700: #1d4ed8;
+  --color-accent-800: #1e40af;
+  --color-accent-900: #1e3a8a;
+}
+
+:root {
+  --brand-navy: #040712;
+  --brand-surface: #0b1020;
+  --brand-indigo: #6366f1;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #0f172a;
+  background: #f5f7fa;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #f5f7fa;
+}
+
+button, input, select, textarea { font: inherit; }
+
+::selection { background: #312e81; color: #ffffff; }
+
+.card-shadow { box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px rgb(15 23 42 / 0.04); }
+
+/* -------------------------------------------------------------------------- */
+/* Optiora dark product system                                                */
+/* -------------------------------------------------------------------------- */
+.dark-app {
+  --dark-page: #050816;
+  --dark-surface: #0b1020;
+  --dark-surface-2: #0f172a;
+  --dark-border: rgba(148, 163, 184, 0.12);
+  --dark-text: #f8fafc;
+  --dark-muted: #94a3b8;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 70% -10%, rgba(99, 102, 241, .13), transparent 32%),
+    radial-gradient(circle at 10% 20%, rgba(34, 211, 238, .045), transparent 26%),
+    #050816;
+}
+
+.dark-app main {
+  position: relative;
+}
+
+.dark-app main::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .22;
+  background-image: linear-gradient(rgba(148,163,184,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+
+.dark-app main > * { position: relative; }
+
+/* Existing light utility classes are intentionally remapped inside the app. */
+.dark-app .bg-white { background-color: #0b1020 !important; }
+.dark-app .bg-slate-50 { background-color: #050816 !important; }
+.dark-app .bg-slate-100 { background-color: #111827 !important; }
+.dark-app .bg-slate-200 { background-color: #1e293b !important; }
+.dark-app .border-slate-100,
+.dark-app .border-slate-200,
+.dark-app .border-slate-300 { border-color: rgba(148,163,184,.12) !important; }
+.dark-app .text-slate-900 { color: #f8fafc !important; }
+.dark-app .text-slate-700 { color: #cbd5e1 !important; }
+.dark-app .text-slate-600 { color: #a8b4c7 !important; }
+.dark-app .text-slate-500 { color: #8492a7 !important; }
+.dark-app .text-slate-400 { color: #94a3b8 !important; }
+.dark-app .text-slate-300 { color: #cbd5e1 !important; }
+
+.dark-app input,
+.dark-app select,
+.dark-app textarea {
+  border-color: rgba(148,163,184,.14) !important;
+  background-color: rgba(255,255,255,.045) !important;
+  color: #f8fafc !important;
+}
+.dark-app input::placeholder,
+.dark-app textarea::placeholder { color: #64748b !important; }
+.dark-app input:focus,
+.dark-app select:focus,
+.dark-app textarea:focus { border-color: rgba(129,140,248,.6) !important; }
+
+.dark-app table { border-color: rgba(148,163,184,.12); }
+.dark-app thead { background: rgba(255,255,255,.025); }
+.dark-app tr { border-color: rgba(148,163,184,.10) !important; }
+.dark-app tbody tr:hover { background: rgba(255,255,255,.025); }
+
+.dark-app .bg-primary-50 { background-color: rgba(99,102,241,.08) !important; }
+.dark-app .bg-primary-100 { background-color: rgba(99,102,241,.14) !important; }
+.dark-app .bg-primary-600,
+.dark-app .bg-primary-700 { background-color: #6366f1 !important; }
+.dark-app .text-primary-600,
+.dark-app .text-primary-700 { color: #a5b4fc !important; }
+.dark-app .text-primary-500 { color: #818cf8 !important; }
+.dark-app .border-primary-100,
+.dark-app .border-primary-200 { border-color: rgba(129,140,248,.18) !important; }
+
+/* Status cards stay color-coded, but in dark variants. */
+.dark-app .bg-green-50,
+.dark-app .bg-emerald-50 { background-color: rgba(16,185,129,.075) !important; }
+.dark-app .bg-amber-50 { background-color: rgba(245,158,11,.075) !important; }
+.dark-app .bg-blue-50 { background-color: rgba(59,130,246,.075) !important; }
+.dark-app .bg-red-50 { background-color: rgba(239,68,68,.075) !important; }
+.dark-app .bg-red-100 { background-color: rgba(239,68,68,.12) !important; }
+.dark-app .border-red-200 { border-color: rgba(248,113,113,.20) !important; }
+.dark-app .text-red-600,
+.dark-app .text-red-700 { color: #fca5a5 !important; }
+.dark-app .text-emerald-700,
+.dark-app .text-green-700 { color: #6ee7b7 !important; }
+.dark-app .text-amber-700 { color: #fcd34d !important; }
+.dark-app .text-blue-700 { color: #93c5fd !important; }
+
+.dark-app .from-primary-50 { --tw-gradient-from: rgba(99,102,241,.10) var(--tw-gradient-from-position) !important; }
+.dark-app .to-white { --tw-gradient-to: #0b1020 var(--tw-gradient-to-position) !important; }
+
+/* Give headings and key KPI numbers more contrast. */
+.dark-app h1,
+.dark-app h2,
+.dark-app h3 { letter-spacing: -.015em; }
+.dark-app .text-3xl,
+.dark-app .text-4xl,
+.dark-app .text-5xl { text-shadow: 0 0 24px rgba(99,102,241,.08); }
+
+/* Reusable elevated panels in pages that use plain utility classes. */
+.dark-app .rounded-xl.border,
+.dark-app .rounded-2xl.border { box-shadow: 0 10px 35px rgba(0,0,0,.12); }
