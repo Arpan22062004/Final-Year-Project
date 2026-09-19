@@ -8,6 +8,24 @@
  * the implementation to API calls without changing page components.
  */
 
+// export {
+//   getProducts,
+//   addProduct,
+//   updateProduct,
+//   deleteProduct,
+//   getCustomers,
+//   addCustomer,
+//   updateCustomer,
+//   deleteCustomer,
+//   getSales,
+//   addSale,
+//   updateSale,
+//   deleteSale,
+//   getUsers,
+//   findUserByEmail,
+//   createUser,
+// } from '@/lib/db';
+
 export {
   getProducts,
   addProduct,
@@ -24,4 +42,5 @@ export {
   getUsers,
   findUserByEmail,
   createUser,
+  updateUser,
 } from '@/lib/db';
