@@ -8,6 +8,10 @@ import {
   LogOut,
   Trash2,
   Check,
+  Phone,
+  Building2,
+  MapPin,
+  Camera,
 } from 'lucide-react';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
@@ -20,49 +24,111 @@ export default function Settings() {
 
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [organizationName, setOrganizationName] = useState(
+    user?.organizationName || ''
+  );
+  const [organizationAddress, setOrganizationAddress] = useState(
+    user?.organizationAddress || ''
+  );
+  const [profilePicture, setProfilePicture] = useState(
+    user?.profilePicture || ''
+  );
+
   const [saved, setSaved] = useState(false);
   const [formError, setFormError] = useState('');
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [twoFactorOpen, setTwoFactorOpen] = useState(false);
-  const [passwords, setPasswords] = useState({ current: '', next: '', confirm: '' });
+  const [passwords, setPasswords] = useState({
+    current: '',
+    next: '',
+    confirm: '',
+  });
   const [securityMessage, setSecurityMessage] = useState('');
 
   const [notifications, setNotifications] = useState(() => {
     const stored = localStorage.getItem('optiora_notifications');
+
     if (stored) {
-      try { return JSON.parse(stored); } catch { /* use defaults */ }
+      try {
+        return JSON.parse(stored);
+      } catch {
+        // use defaults
+      }
     }
+
     return {
-    lowStock: true,
-    newSales: true,
-    weeklyReport: true,
-    productUpdates: false,
+      lowStock: true,
+      newSales: true,
+      weeklyReport: true,
+      productUpdates: false,
     };
   });
 
   useEffect(() => {
-    localStorage.setItem('optiora_notifications', JSON.stringify(notifications));
+    localStorage.setItem(
+      'optiora_notifications',
+      JSON.stringify(notifications)
+    );
   }, [notifications]);
 
   const handleProfile = (e) => {
     e.preventDefault();
+
     try {
-      updateProfile(name, email);
+      updateProfile(
+        name,
+        email,
+        phone,
+        organizationName,
+        organizationAddress,
+        profilePicture
+      );
+
       setFormError('');
       setSaved(true);
+
       setTimeout(() => setSaved(false), 2500);
     } catch (error) {
       setFormError(error.message);
     }
   };
 
+  const handleProfilePicture = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    // Optional size limit: 2MB
+    if (file.size > 2 * 1024 * 1024) {
+      setFormError('Profile picture must be smaller than 2MB.');
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      setFormError('Please select a valid image file.');
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setProfilePicture(reader.result);
+      setFormError('');
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   const handlePasswordChange = (e) => {
     e.preventDefault();
+
     if (passwords.next !== passwords.confirm) {
       setSecurityMessage('New passwords do not match.');
       return;
     }
+
     try {
       changePassword(passwords.current, passwords.next);
       setPasswordOpen(false);
@@ -104,17 +170,48 @@ export default function Settings() {
         </div>
 
         <form onSubmit={handleProfile} className="space-y-4">
+          {/* Profile picture */}
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-xl font-semibold text-white shadow-sm">
-              {name.charAt(0).toUpperCase()}
+            <div className="relative">
+              {profilePicture ? (
+                <img
+                  src={profilePicture}
+                  alt="Profile"
+                  className="h-16 w-16 rounded-full object-cover shadow-sm"
+                />
+              ) : (
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-xl font-semibold text-white shadow-sm">
+                  {name.charAt(0).toUpperCase()}
+                </div>
+              )}
+
+              <label
+                htmlFor="profile-picture"
+                className="absolute -bottom-1 -right-1 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white shadow-md transition hover:bg-blue-700"
+                title="Upload profile picture"
+              >
+                <Camera className="h-3.5 w-3.5" />
+
+                <input
+                  id="profile-picture"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfilePicture}
+                  className="hidden"
+                />
+              </label>
             </div>
 
             <div>
               <p className="text-sm font-medium text-slate-900">{name}</p>
               <p className="text-sm text-slate-500">{email}</p>
+              <p className="mt-1 text-xs text-slate-400">
+                Click the camera icon to change your photo
+              </p>
             </div>
           </div>
 
+          {/* Name + Email */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-slate-700">
@@ -145,8 +242,66 @@ export default function Settings() {
                 />
               </div>
             </div>
+
+            {/* Phone */}
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                Phone Number
+              </label>
+
+              <div className="relative">
+                <Phone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Enter phone number"
+                  className="input-field pl-10"
+                />
+              </div>
+            </div>
+
+            {/* Organization Name */}
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                Organization Name
+              </label>
+
+              <div className="relative">
+                <Building2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+
+                <input
+                  type="text"
+                  value={organizationName}
+                  onChange={(e) => setOrganizationName(e.target.value)}
+                  placeholder="Enter organization name"
+                  className="input-field pl-10"
+                />
+              </div>
+            </div>
+
+            {/* Organization Address */}
+            <div className="sm:col-span-2">
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                Organization Address
+              </label>
+
+              <div className="relative">
+                <MapPin className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-slate-400" />
+
+                <textarea
+                  value={organizationAddress}
+                  onChange={(e) => setOrganizationAddress(e.target.value)}
+                  placeholder="Enter organization address"
+                  rows={3}
+                  className="input-field resize-none pl-10"
+                />
+              </div>
+            </div>
           </div>
 
+          {/* Save */}
           <div className="flex items-center gap-3">
             <Button type="submit">Save Changes</Button>
 
@@ -157,7 +312,12 @@ export default function Settings() {
               </span>
             )}
           </div>
-          {formError && <p className="text-sm text-red-600" role="alert">{formError}</p>}
+
+          {formError && (
+            <p className="text-sm text-red-600" role="alert">
+              {formError}
+            </p>
+          )}
         </form>
       </Card>
 
@@ -251,12 +411,20 @@ export default function Settings() {
               <p className="text-sm font-medium text-slate-900">
                 Change Password
               </p>
+
               <p className="text-xs text-slate-500">
                 Update your account password
               </p>
             </div>
 
-            <Button variant="outline" size="sm" onClick={() => { setSecurityMessage(''); setPasswordOpen(true); }}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSecurityMessage('');
+                setPasswordOpen(true);
+              }}
+            >
               Change
             </Button>
           </div>
@@ -266,12 +434,17 @@ export default function Settings() {
               <p className="text-sm font-medium text-slate-900">
                 Two-Factor Authentication
               </p>
+
               <p className="text-xs text-slate-500">
                 Add an extra layer of security
               </p>
             </div>
 
-            <Button variant="outline" size="sm" onClick={() => setTwoFactorOpen(true)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setTwoFactorOpen(true)}
+            >
               Enable
             </Button>
           </div>
@@ -332,6 +505,7 @@ export default function Settings() {
         </div>
       </Card>
 
+      {/* Delete Modal */}
       <Modal
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
@@ -360,22 +534,85 @@ export default function Settings() {
         </div>
       </Modal>
 
-      <Modal open={passwordOpen} onClose={() => setPasswordOpen(false)} title="Change Password" size="sm">
+      {/* Password Modal */}
+      <Modal
+        open={passwordOpen}
+        onClose={() => setPasswordOpen(false)}
+        title="Change Password"
+        size="sm"
+      >
         <form onSubmit={handlePasswordChange} className="space-y-4">
-          <p className="text-sm text-slate-500">Choose a password with at least 6 characters.</p>
-          {[['current', 'Current password'], ['next', 'New password'], ['confirm', 'Confirm new password']].map(([key, label]) => (
-            <label key={key} className="block text-sm font-medium text-slate-700">{label}
-              <input required minLength="6" type="password" value={passwords[key]} onChange={(e) => setPasswords((prev) => ({ ...prev, [key]: e.target.value }))} className="input-field mt-1.5" />
+          <p className="text-sm text-slate-500">
+            Choose a password with at least 6 characters.
+          </p>
+
+          {[
+            ['current', 'Current password'],
+            ['next', 'New password'],
+            ['confirm', 'Confirm new password'],
+          ].map(([key, label]) => (
+            <label
+              key={key}
+              className="block text-sm font-medium text-slate-700"
+            >
+              {label}
+
+              <input
+                required
+                minLength="6"
+                type="password"
+                value={passwords[key]}
+                onChange={(e) =>
+                  setPasswords((prev) => ({
+                    ...prev,
+                    [key]: e.target.value,
+                  }))
+                }
+                className="input-field mt-1.5"
+              />
             </label>
           ))}
-          {securityMessage && <p className="text-sm text-red-600" role="alert">{securityMessage}</p>}
-          <div className="flex justify-end gap-3 pt-2"><Button type="button" variant="outline" onClick={() => setPasswordOpen(false)}>Cancel</Button><Button type="submit">Update password</Button></div>
+
+          {securityMessage && (
+            <p className="text-sm text-red-600" role="alert">
+              {securityMessage}
+            </p>
+          )}
+
+          <div className="flex justify-end gap-3 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPasswordOpen(false)}
+            >
+              Cancel
+            </Button>
+
+            <Button type="submit">
+              Update password
+            </Button>
+          </div>
         </form>
       </Modal>
 
-      <Modal open={twoFactorOpen} onClose={() => setTwoFactorOpen(false)} title="Two-Factor Authentication" size="sm">
-        <p className="text-sm leading-6 text-slate-600">Two-factor authentication needs an identity service. In this frontend demo, the preference is shown but no real security challenge is connected.</p>
-        <div className="mt-6 flex justify-end"><Button onClick={() => setTwoFactorOpen(false)}>Understood</Button></div>
+      {/* Two Factor Modal */}
+      <Modal
+        open={twoFactorOpen}
+        onClose={() => setTwoFactorOpen(false)}
+        title="Two-Factor Authentication"
+        size="sm"
+      >
+        <p className="text-sm leading-6 text-slate-600">
+          Two-factor authentication needs an identity service. In this
+          frontend demo, the preference is shown but no real security
+          challenge is connected.
+        </p>
+
+        <div className="mt-6 flex justify-end">
+          <Button onClick={() => setTwoFactorOpen(false)}>
+            Understood
+          </Button>
+        </div>
       </Modal>
     </div>
   );

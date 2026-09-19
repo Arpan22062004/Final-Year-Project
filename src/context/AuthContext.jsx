@@ -6,7 +6,11 @@ import {
   useState,
 } from 'react';
 
-import { createUser, findUserByEmail, updateUser } from '@/services/dataService';
+import {
+  createUser,
+  findUserByEmail,
+  updateUser,
+} from '@/services/dataService';
 
 const AuthContext = createContext(null);
 
@@ -60,6 +64,10 @@ export function AuthProvider({ children }) {
       id: foundUser.id,
       name: foundUser.name,
       email: foundUser.email,
+      phone: foundUser.phone || '',
+      organizationName: foundUser.organizationName || '',
+      organizationAddress: foundUser.organizationAddress || '',
+      profilePicture: foundUser.profilePicture || '',
     };
 
     localStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -103,6 +111,10 @@ export function AuthProvider({ children }) {
       id: newUser.id,
       name: newUser.name,
       email: newUser.email,
+      phone: newUser.phone || '',
+      organizationName: newUser.organizationName || '',
+      organizationAddress: newUser.organizationAddress || '',
+      profilePicture: newUser.profilePicture || '',
     };
 
     localStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -117,38 +129,82 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  const updateProfile = (name, email) => {
+  /**
+   * Update the current user's profile.
+   */
+  const updateProfile = (
+    name,
+    email,
+    phone,
+    organizationName,
+    organizationAddress,
+    profilePicture
+  ) => {
     const normalizedName = name.trim();
     const normalizedEmail = email.trim().toLowerCase();
 
-    if (!normalizedName) throw new Error('Please enter your name.');
+    if (!normalizedName) {
+      throw new Error('Please enter your name.');
+    }
+
     if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
       throw new Error('Please enter a valid email address.');
     }
 
     const matchingUser = findUserByEmail(normalizedEmail);
+
     if (matchingUser && matchingUser.id !== user?.id) {
-      throw new Error('An account with this email already exists.');
+      throw new Error(
+        'An account with this email already exists.'
+      );
     }
 
     const updatedUser = updateUser(user.id, {
       name: normalizedName,
       email: normalizedEmail,
+      phone: phone?.trim() || '',
+      organizationName: organizationName?.trim() || '',
+      organizationAddress: organizationAddress?.trim() || '',
+      profilePicture: profilePicture || '',
     });
-    const session = { id: updatedUser.id, name: updatedUser.name, email: updatedUser.email };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+
+    const session = {
+      id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      phone: updatedUser.phone || '',
+      organizationName: updatedUser.organizationName || '',
+      organizationAddress: updatedUser.organizationAddress || '',
+      profilePicture: updatedUser.profilePicture || '',
+    };
+
+    localStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify(session)
+    );
+
     setUser(session);
   };
 
+  /**
+   * Change the current user's password.
+   */
   const changePassword = (currentPassword, nextPassword) => {
     const account = findUserByEmail(user?.email || '');
+
     if (!account || account.password !== currentPassword) {
       throw new Error('Your current password is incorrect.');
     }
+
     if (nextPassword.length < 6) {
-      throw new Error('Your new password must be at least 6 characters long.');
+      throw new Error(
+        'Your new password must be at least 6 characters long.'
+      );
     }
-    updateUser(account.id, { password: nextPassword });
+
+    updateUser(account.id, {
+      password: nextPassword,
+    });
   };
 
   const value = useMemo(
