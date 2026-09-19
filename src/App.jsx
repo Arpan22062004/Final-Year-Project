@@ -1,10 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { AuthProvider, useAuth } from '@/context/AuthContext';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { AuthProvider } from '@/context/AuthContext';
 import AppLayout from '@/components/AppLayout';
-import Home from '@/pages/Home';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
 import Products from '@/pages/Products';
 import Sales from '@/pages/Sales';
@@ -13,17 +9,8 @@ import AIInsights from '@/pages/AIInsights';
 import Reports from '@/pages/Reports';
 import Settings from '@/pages/Settings';
 
-function ProtectedLayout({ children }) {
-  return (
-    <ProtectedRoute>
-      <AppLayout>{children}</AppLayout>
-    </ProtectedRoute>
-  );
-}
-
-function PublicOnly({ children }) {
-  const { user } = useAuth();
-  return user ? <Navigate to="/dashboard" replace /> : children;
+function AppPage({ children }) {
+  return <AppLayout>{children}</AppLayout>;
 }
 
 export default function App() {
@@ -31,18 +18,18 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<PublicOnly><Login /></PublicOnly>} />
-          <Route path="/register" element={<PublicOnly><Register /></PublicOnly>} />
+          {/* Dashboard is now the default page. */}
+          <Route path="/" element={<AppPage><Dashboard /></AppPage>} />
+          <Route path="/dashboard" element={<AppPage><Dashboard /></AppPage>} />
 
-          <Route path="/dashboard" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
-          <Route path="/products" element={<ProtectedLayout><Products /></ProtectedLayout>} />
-          <Route path="/sales" element={<ProtectedLayout><Sales /></ProtectedLayout>} />
-          <Route path="/customers" element={<ProtectedLayout><Customers /></ProtectedLayout>} />
-          <Route path="/ai-insights" element={<ProtectedLayout><AIInsights /></ProtectedLayout>} />
-          <Route path="/reports" element={<ProtectedLayout><Reports /></ProtectedLayout>} />
-          <Route path="/settings" element={<ProtectedLayout><Settings /></ProtectedLayout>} />
+          <Route path="/products" element={<AppPage><Products /></AppPage>} />
+          <Route path="/sales" element={<AppPage><Sales /></AppPage>} />
+          <Route path="/customers" element={<AppPage><Customers /></AppPage>} />
+          <Route path="/ai-insights" element={<AppPage><AIInsights /></AppPage>} />
+          <Route path="/reports" element={<AppPage><Reports /></AppPage>} />
+          <Route path="/settings" element={<AppPage><Settings /></AppPage>} />
 
+          {/* Any old/unknown route opens the dashboard. */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
