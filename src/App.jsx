@@ -1,6 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
-import Home from '@/pages/Home';
 import AppLayout from '@/components/AppLayout';
 import Dashboard from '@/pages/Dashboard';
 import Products from '@/pages/Products';
@@ -20,8 +19,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           {/* Dashboard is now the default page. */}
-          <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<AppPage><Dashboard /></AppPage>}/>
+          <Route path="/" element={<AppPage><Dashboard /></AppPage>}/>
           <Route path="/products" element={<AppPage><Products /></AppPage>} />
           <Route path="/sales" element={<AppPage><Sales /></AppPage>} />
           <Route path="/customers" element={<AppPage><Customers /></AppPage>} />

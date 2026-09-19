@@ -139,16 +139,16 @@ export default function Settings() {
     }
   };
 
-  const handleSignOut = () => {
-    signOut();
-    navigate('/');
+  const handleSignOut = async () => {
+    await signOut();
+     window.location.href = "https://optiora-pi.vercel.app/";
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     localStorage.removeItem('biz_manager_db');
     localStorage.removeItem('biz_manager_session');
-    signOut();
-    navigate('/');
+    await signOut();
+    window.location.href = "https://optiora-pi.vercel.app/";
   };
 
   return (

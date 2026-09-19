@@ -13,10 +13,10 @@ export default function Navbar({ onMenuClick }) {
   const userEmail = user?.email || '';
   const userInitial = userName.charAt(0).toUpperCase();
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     setMenuOpen(false);
-    signOut();
-    navigate('/', { replace: true });
+    await signOut();
+    window.location.href = "https://optiora-pi.vercel.app/", { replace: true };
   };
 
   return (
