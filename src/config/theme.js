@@ -1,26 +1,43 @@
+
 /**
  * Optiora design tokens.
- * Keep product-wide colors here so the UI can be rebranded without editing
- * individual pages and components.
+ * Premium light theme with consistent product-wide colors.
  */
 export const theme = {
   colors: {
     brand: '#6366f1',
     brandStrong: '#4f46e5',
     brandSoft: '#eef2ff',
-    accent: '#22d3ee',
-    surface: '#0b1020',
-    page: '#050816',
-    border: '#1e293b',
-    text: '#f8fafc',
-    muted: '#94a3b8',
+    accent: '#0891b2',
+
+    surface: '#ffffff',
+    page: '#f8fafc',
+    border: '#e2e8f0',
+
+    text: '#0f172a',
+    muted: '#64748b',
   },
-  chart: ['#0f766e', '#2563eb', '#0d9488', '#d97706', '#475569', '#0891b2'],
+
+  chart: [
+    '#4f46e5',
+    '#0f766e',
+    '#0891b2',
+    '#d97706',
+    '#9333ea',
+    '#475569',
+  ],
 };
 
 export const ui = {
-  panel: 'rounded-2xl border border-white/10 bg-[#0b1020] shadow-lg shadow-black/10',
-  panelHeader: 'flex items-start justify-between gap-4 px-5 pt-5',
-  input: 'rounded-lg border border-white/10 bg-white/5 text-slate-100 outline-none transition focus:border-indigo-400/50 focus:ring-2 focus:ring-indigo-400/15',
-  focusRing: 'focus:outline-none focus:ring-2 focus:ring-teal-600/30',
+  panel:
+    'rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-200/50',
+
+  panelHeader:
+    'flex items-start justify-between gap-4 px-5 pt-5',
+
+  input:
+    'rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100',
+
+  focusRing:
+    'focus:outline-none focus:ring-2 focus:ring-indigo-500/20',
 };
